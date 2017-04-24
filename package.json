@@ -1,0 +1,29 @@
+{
+  "name": "react-native-view-mask",
+  "version": "2.0.0",
+  "description": "Native View Mask for React-Native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "react",
+    "shapes",
+    "android",
+    "ios",
+    "mobile"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Rikard Franksson <rikard.franksson@gmail.com>",
+  "dependencies": {
+    "lodash": "latest"
+  },
+  "peerDependencies": {
+    "react-native": "^0.42.0"
+  }
+}
