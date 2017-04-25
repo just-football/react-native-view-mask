@@ -1,6 +1,6 @@
 {
   "name": "react-native-view-mask",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Native View Mask for React-Native",
   "main": "index.js",
   "scripts": {
