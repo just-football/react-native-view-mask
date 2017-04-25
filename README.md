@@ -4,4 +4,6 @@
 - Add masks to your image assets (import from android/src/main/res/drawable-*)
 
 ## Usage
+```
 <JFViewMask maskName="asset"></JFViewMask>
+```
