@@ -1,6 +1,5 @@
 package com.reactlibrary;
 
-import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -25,5 +24,10 @@ public class RNViewMaskModule extends ViewGroupManager<RNViewMask> {
     @Override
     protected RNViewMask createViewInstance(ThemedReactContext reactContext) {
         return new RNViewMask(reactContext);
+    }
+
+    @ReactProp(name = "maskName")
+    public void setMaskName(RNViewMask view, @Nullable String maskName) {
+        view.setMask(maskName);
     }
 }

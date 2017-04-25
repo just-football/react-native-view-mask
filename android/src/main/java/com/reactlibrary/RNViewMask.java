@@ -1,22 +1,26 @@
 package com.reactlibrary;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.graphics.Region;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 
 public class RNViewMask extends ViewGroup {
-    private Path hexagonPath;
-    private Path hexagonBorderPath;
-    private Paint mBorderPaint;
-    private Integer strokeWidth = 0;
-    private int strokeColor = Color.WHITE;
+    private Bitmap mMaskBitmap = null;
+    private BitmapDrawable mMaskImage = null;
+    private Paint mPaint = new Paint();
+    private PorterDuffXfermode mDuffMode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+    private Resources mResources = this.getContext().getResources();
+
+    private int mLastMeasuredWidth = -1, mLastMeasuredHeight = -1;
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -40,83 +44,55 @@ public class RNViewMask extends ViewGroup {
 
     private void init() {
         this.setBackgroundColor(Color.TRANSPARENT);
-        this.hexagonPath = new Path();
-        this.hexagonBorderPath = new Path();
+        this.setLayerType(LAYER_TYPE_HARDWARE, null);
 
-        this.mBorderPaint = new Paint();
-        this.mBorderPaint.setColor(this.strokeColor);
-        this.mBorderPaint.setStrokeCap(Paint.Cap.ROUND);
-        this.mBorderPaint.setStrokeWidth(this.strokeWidth);
-        this.mBorderPaint.setStyle(Paint.Style.STROKE);
+        this.mMaskImage = new BitmapDrawable(
+                getContext().getResources(),
+                BitmapFactory.decodeResource(this.mResources, R.drawable.hexagon_vertical)
+        );
     }
 
-    private void calculatePath(float radius) {
-        float halfRadius = radius / 2f;
-        float triangleHeight = (float) (Math.sqrt(3.0) * halfRadius);
-        float centerX = getMeasuredWidth() / 2f;
-        float centerY = getMeasuredHeight() / 2f;
+    public void setMask(String maskName) {
+        int resID = this.mResources.getIdentifier(maskName, "drawable", "com.reactlibrary");
 
-        this.hexagonPath.reset();
-        this.hexagonPath.moveTo(centerX - radius, centerY);
-        this.hexagonPath.lineTo(centerX - halfRadius, centerY - triangleHeight);
-        this.hexagonPath.lineTo(centerX + halfRadius, centerY - triangleHeight);
-        this.hexagonPath.lineTo(centerX + radius, centerY);
-        this.hexagonPath.lineTo(centerX + halfRadius, centerY + triangleHeight);
-        this.hexagonPath.lineTo(centerX - halfRadius, centerY + triangleHeight);
-        this.hexagonPath.close();
-
-
-        float radiusBorder = radius + (float) this.strokeWidth;
-        float halfRadiusBorder = radiusBorder / 2f;
-        float triangleBorderHeight = (float) (Math.sqrt(3.0) * halfRadiusBorder);
-
-        this.hexagonBorderPath.reset();
-        this.hexagonBorderPath.moveTo(centerX - radiusBorder, centerY);
-        this.hexagonBorderPath.lineTo(centerX - halfRadiusBorder, centerY - triangleBorderHeight);
-        this.hexagonBorderPath.lineTo(centerX + halfRadiusBorder, centerY - triangleBorderHeight);
-        this.hexagonBorderPath.lineTo(centerX + radiusBorder, centerY);
-        this.hexagonBorderPath.lineTo(centerX + halfRadiusBorder, centerY + triangleBorderHeight);
-        this.hexagonBorderPath.lineTo(centerX - halfRadiusBorder, centerY + triangleBorderHeight);
-        this.hexagonBorderPath.close();
-        invalidate();
+        this.mMaskImage = new BitmapDrawable(
+                getContext().getResources(),
+                BitmapFactory.decodeResource(this.mResources, resID)
+        );
     }
-
-//    private void calculatePath(float radius) {
-//        float halfRadius = radius / 2f;
-//        float triangleHeight = (float) (Math.sqrt(3.0) * halfRadius);
-//        float centerX = getMeasuredWidth() / 2f;
-//        float centerY = getMeasuredHeight() / 2f;
-//
-//        this.hexagonPath.reset();
-//        this.hexagonPath.moveTo(centerX, centerY + radius);
-//        this.hexagonPath.lineTo(centerX - triangleHeight, centerY + halfRadius);
-//        this.hexagonPath.lineTo(centerX - triangleHeight, centerY - halfRadius);
-//        this.hexagonPath.lineTo(centerX, centerY - radius);
-//        this.hexagonPath.lineTo(centerX + triangleHeight, centerY - halfRadius);
-//        this.hexagonPath.lineTo(centerX + triangleHeight, centerY + halfRadius);
-//        this.hexagonPath.close();
-//
-//        float radiusBorder = radius - 5f;
-//        float halfRadiusBorder = radiusBorder / 2f;
-//        float triangleBorderHeight = (float) (Math.sqrt(3.0) * halfRadiusBorder);
-//
-//        this.hexagonBorderPath.reset();
-//        this.hexagonBorderPath.moveTo(centerX, centerY + radiusBorder);
-//        this.hexagonBorderPath.lineTo(centerX - triangleBorderHeight, centerY + halfRadiusBorder);
-//        this.hexagonBorderPath.lineTo(centerX - triangleBorderHeight, centerY - halfRadiusBorder);
-//        this.hexagonBorderPath.lineTo(centerX, centerY - radiusBorder);
-//        this.hexagonBorderPath.lineTo(centerX + triangleBorderHeight, centerY - halfRadiusBorder);
-//        this.hexagonBorderPath.lineTo(centerX + triangleBorderHeight, centerY + halfRadiusBorder);
-//        this.hexagonBorderPath.close();
-//        invalidate();
-//    }
 
     @Override
-    public void onDraw(Canvas c) {
-        c.drawPath(hexagonBorderPath, mBorderPaint);
-        c.clipPath(hexagonPath, Region.Op.INTERSECT);
-        c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        super.onDraw(c);
+    public void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+
+        if (this.mMaskImage != null && getMeasuredWidth() > 0 && getMeasuredHeight() > 0) {
+            this.reloadBitmapMask();
+
+            this.mPaint.setXfermode(this.mDuffMode);
+            canvas.drawBitmap(this.mMaskBitmap, 0.0f, 0.0f, this.mPaint);
+            this.mPaint.setXfermode(null);
+        }
+    }
+
+    private void reloadBitmapMask() {
+        if (getMeasuredWidth() != this.mLastMeasuredWidth || getMeasuredHeight() != this.mLastMeasuredHeight) {
+            if (this.mMaskBitmap != null && !this.mMaskBitmap.isRecycled()) {
+                this.mMaskBitmap.recycle();
+            }
+
+            this.mMaskBitmap = Bitmap.createBitmap(
+                    getMeasuredWidth(),
+                    getMeasuredHeight(),
+                    Bitmap.Config.ARGB_8888
+            );
+            Canvas maskCanvas = new Canvas(this.mMaskBitmap);
+
+            this.mMaskImage.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+            this.mMaskImage.draw(maskCanvas);
+
+            this.mLastMeasuredWidth = getMeasuredWidth();
+            this.mLastMeasuredHeight = getMeasuredHeight();
+        }
     }
 
     @Override
@@ -127,16 +103,5 @@ public class RNViewMask extends ViewGroup {
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
         setMeasuredDimension(width, height);
-        calculatePath(Math.min(width / 2f, height / 2f) - 20f);
-    }
-
-    public void setStrokeWidth(Integer strokeWidth) {
-        this.strokeWidth = strokeWidth;
-        init();
-    }
-
-    public void setStrokeColor(Integer strokeColor) {
-        this.strokeColor = strokeColor;
-        init();
     }
 }

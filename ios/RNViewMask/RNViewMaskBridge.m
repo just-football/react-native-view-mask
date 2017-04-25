@@ -6,6 +6,6 @@
 @interface RCT_EXTERN_MODULE(RNViewMaskManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(size, NSNumber)
-RCT_EXPORT_VIEW_PROPERTY(isHorizontal, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(maskName, NSString)
 
 @end

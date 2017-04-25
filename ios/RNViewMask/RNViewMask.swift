@@ -3,7 +3,7 @@ import UIKit
 @objc(RNViewMask)
 class RNViewMask: UIView {
     
-    private var _isHorizontal: Bool = false
+    private var _maskName: NSString = false
     private var _size: CGFloat = 0
     
     private var borderLayer = CAShapeLayer()
@@ -20,11 +20,11 @@ class RNViewMask: UIView {
         }
     }
     
-    var isHorizontal: NSNumber? {
+    var maskName: NSString? {
         set {
-            if let horizontal = newValue {
-                if self._isHorizontal != RCTConvert.bool(horizontal) {
-                    self._isHorizontal = RCTConvert.bool(horizontal)
+            if let name = newValue {
+                if self._maskName != RCTConvert.string(name) {
+                    self._maskName = RCTConvert.string(name)
                     self.setNeedsDisplay()
                 }
             }
@@ -46,7 +46,7 @@ class RNViewMask: UIView {
     }
     
     func setupViewMask(view: UIView) {
-        if let maskImage = UIImage(named: "mask") {
+        if let maskImage = UIImage(named: this._maskName) {
           let maskView = UIImageView(image: maskImage)
           maskView.frame = view.frame
           maskView.contentMode = .scaleAspectFit
