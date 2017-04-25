@@ -46,13 +46,13 @@ class RNViewMask: UIView {
     }
     
     func setupViewMask(view: UIView) {
-        NSLog("Suhhh dude")
-        
-        let mask = UIImage(named: "mask")
-        let maskView = UIImageView(image: mask)
-        maskView.frame = view.frame
-        maskView.contentMode = .scaleAspectFit
-        view.mask = maskView
+        if let maskImage = UIImage(named: "mask") {
+          let maskView = UIImageView(image: maskImage)
+          maskView.frame = view.frame
+          maskView.contentMode = .scaleAspectFit
+          
+          view.mask = maskView
+        }
     }
     
     override class var layerClass: AnyClass {
