@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 
-public class RNShapeView extends ViewGroup {
+public class RNViewMask extends ViewGroup {
     private Path hexagonPath;
     private Path hexagonBorderPath;
     private Paint mBorderPaint;
@@ -23,17 +23,17 @@ public class RNShapeView extends ViewGroup {
 
     }
 
-    public RNShapeView(Context context) {
+    public RNViewMask(Context context) {
         super(context);
         init();
     }
 
-    public RNShapeView(Context context, AttributeSet attrs) {
+    public RNViewMask(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public RNShapeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RNViewMask(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
