@@ -47,16 +47,16 @@ public class RNViewMask extends ViewGroup {
         this.setLayerType(LAYER_TYPE_HARDWARE, null);
 
         this.mMaskImage = new BitmapDrawable(
-                getContext().getResources(),
+                this.mResources,
                 BitmapFactory.decodeResource(this.mResources, R.drawable.hexagon_vertical)
         );
     }
 
     public void setMask(String maskName) {
-        int resID = this.mResources.getIdentifier(maskName, "drawable", "com.reactlibrary");
+        int resID = this.mResources.getIdentifier(maskName, "drawable", getContext().getPackageName());
 
         this.mMaskImage = new BitmapDrawable(
-                getContext().getResources(),
+                this.mResources,
                 BitmapFactory.decodeResource(this.mResources, resID)
         );
     }
