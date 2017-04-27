@@ -3,7 +3,7 @@ import UIKit
 @objc(RNViewMask)
 class RNViewMask: UIView {
     
-    private var _maskName: NSString = false
+    private var _maskName: String = ""
     private var _size: CGFloat = 0
     
     private var borderLayer = CAShapeLayer()
@@ -23,8 +23,8 @@ class RNViewMask: UIView {
     var maskName: NSString? {
         set {
             if let name = newValue {
-                if self._maskName != RCTConvert.string(name) {
-                    self._maskName = RCTConvert.string(name)
+                if self._maskName != RCTConvert.nsString(name) {
+                    self._maskName = RCTConvert.nsString(name)
                     self.setNeedsDisplay()
                 }
             }
