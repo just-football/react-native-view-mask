@@ -19,3 +19,7 @@ Android: fork the module and add the png to android/src/main/res/drawable-* (add
 <br>
 iOS: no need to fork, just import your png in xcode project image assets
 - Use the mask with `<JFMaskView maskName="nameOfYourMask.png"></JFMaskView>`
+
+## Current available masks
+- hexagon_vertical
+- fade_top
