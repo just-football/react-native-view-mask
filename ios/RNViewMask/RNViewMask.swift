@@ -46,7 +46,7 @@ class RNViewMask: UIView {
     }
     
     func setupViewMask(view: UIView) {
-        if let maskImage = UIImage(named: this._maskName) {
+        if let maskImage = UIImage(named: self._maskName) {
           let maskView = UIImageView(image: maskImage)
           maskView.frame = view.frame
           maskView.contentMode = .scaleAspectFit
