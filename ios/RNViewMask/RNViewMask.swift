@@ -4,21 +4,8 @@ import UIKit
 class RNViewMask: UIView {
     
     private var _maskName: String = ""
-    private var _size: CGFloat = 0
     
     private var borderLayer = CAShapeLayer()
-    
-    var size: NSNumber? {
-        set {
-            let newSize = RCTConvert.cgFloat(newValue)
-            self.frame.size.width = newSize
-            self.frame.size.height = newSize
-            self.setNeedsDisplay()
-        }
-        get {
-            return nil
-        }
-    }
     
     var maskName: NSString? {
         set {
