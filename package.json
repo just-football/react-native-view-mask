@@ -22,7 +22,7 @@
   "author": "Rikard Franksson <rikard.franksson@gmail.com>",
   "dependencies": {
     "lodash": "latest",
-    "prop-types": "latest",
+    "prop-types": "latest"
   },
   "peerDependencies": {
     "react-native": "^0.42.0"
