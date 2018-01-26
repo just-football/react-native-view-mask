@@ -23,3 +23,4 @@ iOS: no need to fork, just import your png in xcode project image assets
 ## Current available masks
 - hexagon_vertical
 - fade_top
+- player_card
